@@ -1,0 +1,101 @@
+@extends('layouts.main')
+
+@section('title', $educational_program->title)
+@section('id', 'InternationalBaccalaureate')
+
+@push('style')
+    <link rel="stylesheet" href="{{asset('/css/InternationalBaccalaureate.css')}}"/>
+@endpush
+
+@section('content')
+    <x-layout.header-image title="{!! $educational_program->title!!}"
+                           description="{!! $educational_program->description !!}"
+                           :image="$educational_program->image"></x-layout.header-image>
+    <section>
+        <div class="container main-topic">
+            <h4>{{\App\Helpers\Utilities::trimParagraph($educational_program->inner_description)}}</h4>
+        </div>
+    </section>
+
+    @if ($educational_program->features->count())
+        <section class="international-baccalaureate-section">
+            <div class="container">
+                <div class="international-baccalaureate-content">
+                    <ul
+                            class="nav nav-tabs mb-4 justify-content-start gap-4 px-2 py-1 rounded-5"
+                            role="tablist"
+                    >
+                        @foreach($educational_program->features as $feature)
+                            <li class="nav-item" role="presentation">
+                                <a
+                                        class="nav-link @if($loop->first) active @endif"
+                                        id="simple-tab-{{$loop->index}}"
+                                        data-bs-toggle="tab"
+                                        href="#simple-tabpanel-{{$loop->index}}"
+                                        role="tab"
+                                        aria-controls="simple-tabpanel-{{$loop->index}}"
+                                        aria-selected="@if($loop->index == 0) true @endif"
+                                >{{$feature->title}}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <div class="tab-content pt-3" id="tab-content">
+                        @foreach($educational_program->features as $feature)
+                            <div
+                                    class="tab-pane @if($loop->first) active @endif"
+                                    id="simple-tabpanel-{{$loop->index}}"
+                                    role="tabpanel"
+                                    aria-labelledby="simple-tab-{{$loop->index}}"
+                            >
+                                <div class="middle-years-program">
+                                    <div class="middle-years-desc">
+                                        {!! $feature->content !!}
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
+
+
+    <section class="Download-section my-5 py-5">
+        <div class="container mb-4">
+            <h2> {{\App\Helpers\Utilities::trimParagraph($educational_program->downloads_section_description)}} </h2>
+        </div>
+        <div class="container">
+            @foreach($educational_program->documents as $document)
+                <div class="Download-card">
+                    <picture>
+                        <img
+                                src="{{asset('/Assets/Icons/General/pdf (1) 3.svg')}}"
+                                alt=""
+                                srcset=""
+                        />
+                    </picture>
+                    <div class="Download-card-content">
+                        <h4>{{$document->title}}</h4>
+                        <a href="{{\Awcodes\Curator\Models\Media::find($document->image_id)?->url ?? "#"}}" class="main-btn" target="_blank" rel="noopener noreferrer">
+                            <span> @lang('site.Download') </span>
+                            <svg
+                                    width="19"
+                                    height="19"
+                                    viewBox="0 0 19 19"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                        d="M18.75 11.625V17.625C18.75 17.9234 18.6315 18.2095 18.4205 18.4205C18.2095 18.6315 17.9234 18.75 17.625 18.75H1.125C0.826631 18.75 0.540483 18.6315 0.329505 18.4205C0.118526 18.2095 0 17.9234 0 17.625V11.625C0 11.3266 0.118526 11.0405 0.329505 10.8295C0.540483 10.6185 0.826631 10.5 1.125 10.5C1.42337 10.5 1.70952 10.6185 1.9205 10.8295C2.13147 11.0405 2.25 11.3266 2.25 11.625V16.5H16.5V11.625C16.5 11.3266 16.6185 11.0405 16.8295 10.8295C17.0405 10.6185 17.3266 10.5 17.625 10.5C17.9234 10.5 18.2095 10.6185 18.4205 10.8295C18.6315 11.0405 18.75 11.3266 18.75 11.625ZM8.57906 12.4209C8.68358 12.5258 8.80777 12.609 8.94452 12.6658C9.08126 12.7226 9.22787 12.7518 9.37594 12.7518C9.524 12.7518 9.67061 12.7226 9.80736 12.6658C9.9441 12.609 10.0683 12.5258 10.1728 12.4209L13.9228 8.67094C14.1342 8.45959 14.2529 8.17295 14.2529 7.87406C14.2529 7.57518 14.1342 7.28853 13.9228 7.07719C13.7115 6.86584 13.4248 6.74711 13.1259 6.74711C12.8271 6.74711 12.5404 6.86584 12.3291 7.07719L10.5 8.90625V1.125C10.5 0.826631 10.3815 0.540483 10.1705 0.329505C9.95952 0.118526 9.67337 0 9.375 0C9.07663 0 8.79048 0.118526 8.5795 0.329505C8.36853 0.540483 8.25 0.826631 8.25 1.125V8.90625L6.42094 7.07906C6.31629 6.97442 6.19206 6.8914 6.05533 6.83477C5.9186 6.77814 5.77206 6.74899 5.62406 6.74899C5.32518 6.74899 5.03853 6.86772 4.82719 7.07906C4.72254 7.18371 4.63953 7.30794 4.5829 7.44467C4.52626 7.5814 4.49711 7.72794 4.49711 7.87594C4.49711 8.17482 4.61584 8.46147 4.82719 8.67281L8.57906 12.4209Z"
+                                />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+            @endforeach
+        </div>
+    </section>
+@endsection
